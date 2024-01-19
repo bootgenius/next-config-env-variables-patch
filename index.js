@@ -1,1 +1,1 @@
-require('./src/next-config-env-variables-patch.js');
+require('./bin/next-config-env-variables-patch.js');
