@@ -41,5 +41,26 @@ yarn add next-config-env-variables-patch -D
     ```
 
 ## How It Works
-`next-config-env-variables-patch` modifies the `server.js` file, adding code to dynamically replace `publicRuntimeConfig` and `serverRuntimeConfig` properties that start with the `ENV_` prefix. It uses corresponding environment variables, defaulting to the generated value if the environment variable is not set.
+`next-config-env-variables-patch` modifies the `server.js`. It adds an additional code to the server.js before starting the server
+```javascript
+// DYNAMIC_CONFIG_ENV_VARIABLES_PATCH_START
+if (nextConfig.publicRuntimeConfig) {
+  for (const key in nextConfig.publicRuntimeConfig) {
+    if (nextConfig.publicRuntimeConfig.hasOwnProperty(key) && key.startsWith('ENV_')) {
+      nextConfig.publicRuntimeConfig[key] = process.env[key] || nextConfig.publicRuntimeConfig[key];   
+    }
+  }
+}
+if (nextConfig.serverRuntimeConfig) {
+  for (const key in nextConfig.serverRuntimeConfig) {
+    if (nextConfig.serverRuntimeConfig.hasOwnProperty(key) && key.startsWith('ENV_')) {
+      nextConfig.serverRuntimeConfig[key] = process.env[key] || nextConfig.serverRuntimeConfig[key];   
+    }
+  }
+}
+process.env.__NEXT_PRIVATE_STANDALONE_CONFIG = JSON.stringify(nextConfig);
+// DYNAMIC_CONFIG_ENV_VARIABLES_PATCH_END
+```
+
+This code gets `publicRuntimeConfig` and `serverRuntimeConfig` that was generated at the build time and replaces all the properties in configs that start with `ENV_` prefix with the environment variable with the same name. If there is no environment variable with same name, the default generated value is used.
 

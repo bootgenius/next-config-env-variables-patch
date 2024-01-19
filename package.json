@@ -1,6 +1,6 @@
 {
     "name": "next-config-env-variables-patch",
-    "version": "1.0.2",
+    "version": "1.0.3",
 	"description": "This package is a patch for nextjs standalone build. It patches server.js to be able to use dynamic ENV variabled for the publicRuntimeConfig and serverRuntimeConfig",
     "main": "index.js",
 	"bin": {
